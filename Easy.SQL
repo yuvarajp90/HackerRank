@@ -98,3 +98,93 @@ select name from employee where salary>2000 and months<10
 --Isosceles: It's a triangle with  sides of equal length. 
 --Scalene: It's a triangle with  sides of differing lengths. 
 --Not A Triangle: The given values of A, B, and C don't form a triangle.
+select
+case 
+when A+B<= C or B+C<= A or A+C<= B then 'Not A Triangle'
+when A=B and B=C then 'Equilateral'
+when A=B or B=C or A=C then 'Isosceles'
+else 'Scalene'
+end
+from triangles
+
+--Q22
+--Query a count of the number of cities in CITY having a Population larger than 100000
+select count(name) from city where population > 100000
+
+--Q23
+--Query the total population of all cities in CITY where District is California.
+select sum(population) from city where district='California'
+
+--Q24
+--Query the average population of all cities in CITY where District is California.
+select avg(population) from city where district='California'
+
+--Q25
+--Query the average population for all cities in CITY, rounded down to the nearest integer.
+select round(avg(population),0) from city
+
+--Q26
+--Query the sum of the populations for all Japanese cities in CITY. The COUNTRYCODE for Japan is JPN.
+select sum(population) from city where countrycode='JPN'
+
+--Q27
+--Query the difference between the maximum and minimum populations in CITY
+select max(population)-min(population) from city
+
+--Q28
+--Samantha was tasked with calculating the average monthly salaries for all employees in the EMPLOYEES table, but did not realize her keyboard's  key was broken until after completing the calculation. She wants your help finding the difference between her miscalculation (using salaries with any zeroes removed), and the actual average salary. Write a query calculating the amount of error (i.e.: actual - miscalculated average monthly salaries), and round it up to the next integer.
+select ceiling(avg(salary)-avg(REPLACE(salary,0, ''))) from employees
+
+--Q29
+--Given the CITY and COUNTRY tables, query the names of all the continents (COUNTRY.Continent) and their respective average city populations (CITY.Population) rounded down to the nearest integer.
+select b.continent,floor(avg(a.population))
+from city a inner join country b
+on a.countrycode=b.code
+group by b.continent
+
+--Q30
+--We define an employee's total earnings to be their monthly  worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee table. Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings
+select (months*salary) as earnings, count(employee_id) 
+from employee 
+group by earnings 
+order by earnings desc
+limit 1
+
+--Q31
+--Query the following two values from the STATION table: The sum of all values in LAT_N and LONG_W rounded to a scale of 2 decimal places.
+select round(sum(lat_n),2),round(sum(long_w),2) from station
+
+--Q32
+--Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than  and less than . Truncate your answer to 4 decimal places.
+select round(sum(lat_n),4) from station where lat_n > 38.7880 and lat_n <137.2345
+
+--Q33
+--Query the greatest value of the Northern Latitudes (LAT_N) from STATION that is less than 137. Truncate your answer to 4 decimal places.
+select round(max(lat_n),4) from station where lat_n < 137.2345
+
+--Q34
+--Query the Western Longitude (LONG_W) for the largest Northern Latitude (LAT_N) in STATION that is less than . Round your answer to  decimal places
+select round(long_w,4) from station where lat_n=(select max(lat_n) from station where lat_n <137.2345)
+
+--Q35
+--Query the smallest Northern Latitude (LAT_N) from STATION that is greater than . Round your answer to  decimal places.
+select round(min(case when lat_n >38.7780 then lat_n else null end),4) from station
+
+--Q36
+--Query the Western Longitude (LONG_W)where the smallest Northern Latitude (LAT_N) in STATION is greater than . Round your answer to  decimal places.
+select round(long_w,4) from station where lat_n=(select min(case when lat_n > 38.7780 then lat_n else null end))
+
+--Q37
+--Given the CITY and COUNTRY tables, query the sum of the populations of all cities where the CONTINENT is 'Asia'.
+select sum(a.population) 
+from city a inner join country b
+on a.countrycode=b.code
+where b.continent='Asia'
+
+--Q38
+--Given the CITY and COUNTRY tables, query the names of all cities where the CONTINENT is 'Africa'.
+select a.name
+from city a inner join country b
+on a.countrycode=b.code
+where b.continent='Africa'
+
