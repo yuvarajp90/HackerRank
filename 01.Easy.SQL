@@ -188,3 +188,14 @@ from city a inner join country b
 on a.countrycode=b.code
 where b.continent='Africa'
 
+--Q39
+--Find duplicates in a column
+
+--option1
+select col from table group by col having count(*)>1;
+
+--option2
+select distinct a.col
+from table a, table b
+where a.col=b.col and a.s_no<>b.s_no
+;
