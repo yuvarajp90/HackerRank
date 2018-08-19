@@ -39,11 +39,6 @@ ORDER BY Salary
 SELECT Salary FROM Employee 
 ORDER BY Salary DESC LIMIT n-1,1
 
---Find the nth highest salary in SQL Server
-SELECT Salary FROM Employee 
-ORDER BY Salary DESC OFFSET N-1 ROW(S) 
-FETCH FIRST ROW ONLY
-
 --Find the nth highest salary in Oracle using rownum
 select * from (
   select Emp.*, 
@@ -59,3 +54,15 @@ select EmployeeID, Salary
 from Employee
 )
 WHERE ranking = N
+
+--HIVE random sampling
+select * from my_table
+where rand() <= 0.0001
+distribute by rand()
+sort by rand()
+limit 10000;
+
+--SQL random sampling
+select * from my_table
+where rand() <= 0.0001
+limit 10000;
