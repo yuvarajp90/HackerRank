@@ -115,7 +115,6 @@ from
 	) z
 	where z.friend_salary>=z.salary
 	order by z.friend_salary
-;
 
 --Q10
 select c.company_code,c.founder
