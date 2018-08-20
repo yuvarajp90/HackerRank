@@ -153,6 +153,7 @@ limit 1
 --Q31
 --Query the following two values from the STATION table: The sum of all values in LAT_N and LONG_W rounded to a scale of 2 decimal places.
 select round(sum(lat_n),2),round(sum(long_w),2) from station
+;
 
 --Q32
 --Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than  and less than . Truncate your answer to 4 decimal places.
