@@ -111,10 +111,7 @@ from
 		from students s inner join friends f on s.id=f.id
 		left join packages p on s.id=p.id
 		) a
-	inner join packages p on f.id=p.id
-	) z
-	where z.friend_salary>=z.salary
-	order by z.friend_salary
+
 
 --Q10
 select c.company_code,c.founder
