@@ -97,4 +97,34 @@ hackers h
 on a.hacker_id=h.hacker_id
 group by hacker_id,h.name
 having score>0
-order by score desc, hacker_id 
+order by score desc, hacker_id
+
+--Q10
+select c.company_code,c.founder
+,count(distinct lm.lead_manager_code)
+,count(distinct sm.senior_manager_code)
+,count(distinct m.manager_code)
+,count(distinct e.employee_code)
+from
+company c
+left join lead_manager lm on c.company_code=lm.company_code
+left join senior_manager sm on lm.company_code=sm.company_code and lm.lead_manager_code=sm.lead_manager_code
+left join manager m on sm.company_code=m.company_code and sm.lead_manager_code=m.lead_manager_code and sm.senior_manager_code=m.senior_manager_code
+left join employee e on m.company_code=e.company_code and m.lead_manager_code=e.lead_manager_code and m.senior_manager_code=e.senior_manager_code and m.manager_code=e.manager_code
+group by c.company_code,c.founder
+order by c.company_code asc
+;
+             
+--Q11
+--Find the median without using any function
+--option1
+select round(s.lat_n,4) median
+from station s
+where (select count(lat_n) from station where lat_n>s.lat_n)=(select count(lat_n) from station where lat_n<s.lat_n)
+
+--option2
+SELECT round(AVG(t1.lat_n),4)
+FROM station t1, station t2
+GROUP BY t1.lat_n
+HAVING SUM(SIGN(t1.lat_n - t2.lat_n))=0
+
