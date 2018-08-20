@@ -37,3 +37,64 @@ grades b
 on a.marks between b.min_mark and b.max_mark
 order by grade desc, name asc, marks asc
 
+--Q6
+--Julia just finished conducting a coding contest, and she needs your help assembling the leaderboard! Write a query to print the respective hacker_id and name of hackers who achieved full scores for more than one challenge. Order your output in descending order by the total number of challenges in which the hacker earned a full score. If more than one hacker received full scores in same number of challenges, then sort them by ascending hacker_id.
+
+select z.hacker_id,h.name
+from
+(
+select s.hacker_id
+,case when s.score=d.score then 'Full' else 'Partial' end flag
+,count(distinct s.challenge_id) cnt
+from
+submissions s
+left join challenges c 
+on s.challenge_id=c.challenge_id
+left join difficulty d
+on c.difficulty_level=d.difficulty_level
+group by s.hacker_id,flag
+)z
+left join hackers h on z.hacker_id=h.hacker_id
+where z.flag='Full' and z.cnt >1
+order by cnt desc, hacker_id asc
+;
+             
+--Q7
+--Julia asked her students to create some coding challenges. Write a query to print the hacker_id, name, and the total number of challenges created by each student. Sort your results by the total number of challenges in descending order. If more than one student created the same number of challenges, then sort the result by hacker_id. If more than one student created the same number of challenges and the count is less than the maximum number of challenges created, then exclude those students from the result.
+
+select h.hacker_id,h.name,count(distinct c.challenge_id) cnt
+from 
+hackers h inner join challenges c
+on h.hacker_id=c.hacker_id
+group by h.hacker_id,h.name
+having 
+cnt=(select max(cnt) from 
+        (select hacker_id,count(distinct challenge_id) cnt from challenges group by hacker_id) a
+    )
+or
+cnt in ( select cnt from 
+					(select cnt, count(distinct hacker_id) hack_cnt from
+							(select hacker_id,count(distinct challenge_id) cnt from challenges group by hacker_id) a
+            group by cnt
+            having hack_cnt=1
+         )b
+            )
+order by cnt desc, hacker_id
+;
+
+--Q8
+--The total score of a hacker is the sum of their maximum scores for all of the challenges. Write a query to print the hacker_id, name, and total score of the hackers ordered by the descending score. If more than one hacker achieved the same total score, then sort the result by ascending hacker_id. Exclude all hackers with a total score of  from your result.
+
+select a.hacker_id,h.name,sum(a.max_score) score
+from
+(
+select hacker_id,challenge_id,max(score) max_score
+from submissions
+group by hacker_id,challenge_id
+)a
+inner join
+hackers h
+on a.hacker_id=h.hacker_id
+group by hacker_id,h.name
+having score>0
+order by score desc, hacker_id 
