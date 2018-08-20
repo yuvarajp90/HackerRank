@@ -201,3 +201,4 @@ select distinct a.col
 from table a, table b
 where a.col=b.col and a.s_no<>b.s_no
 ;
+
