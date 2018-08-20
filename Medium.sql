@@ -205,3 +205,4 @@ WHERE
     AND l1.Num = l2.Num
     AND l2.Num = l3.Num
 ;
+
