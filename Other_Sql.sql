@@ -66,3 +66,12 @@ limit 10000;
 select * from my_table
 where rand() <= 0.0001
 limit 10000;
+
+
+--Find cases where there are only entry. Example: Find all the instructors that taught at most one course in the year 2017.
+SELECT I.EMPLOYEEID, I.NAME
+FROM Instructor as I
+WHERE UNIQUE (SELECT Inst.EMPLOYEEID
+              FROM Instructor as Inst
+              WHERE I.EMPLOYEEID = Inst.EMPLOYEEID
+                          and Inst.YEAR = 2017);
