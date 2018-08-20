@@ -101,16 +101,6 @@ order by score desc, hacker_id
 
 --Q9
 --Write a query to output the names of those students whose best friends got offered a higher salary than them. Names must be ordered by the salary amount offered to the best friends. It is guaranteed that no two students got same salary offer
-select z.name
-from
-(
-	select a.*, p.salary as friend_salary
-	from
-	(
-		select s.id,s.name,p.salary,f.friend_id
-		from students s inner join friends f on s.id=f.id
-		left join packages p on s.id=p.id
-		) a
 
 
 --Q10
