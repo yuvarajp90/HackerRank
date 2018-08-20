@@ -128,3 +128,76 @@ FROM station t1, station t2
 GROUP BY t1.lat_n
 HAVING SUM(SIGN(t1.lat_n - t2.lat_n))=0
 
+--Q12
+--Write a query to output the start and end dates of projects listed by the number of days it took to complete the project in ascending order. If there is more than one project that have the same number of completion days, then order by the start date of the project.
+select start_date,min(end_date)
+from
+(select distinct start_date from projects where start_date not in (select distinct end_date from projects))a
+,(select distinct end_date from projects where end_date not in (select distinct start_date from projects))b
+where start_date<end_date
+group by start_date
+order by datediff(min(end_date),start_date),start_date
+                                                                
+--Q13
+--How to find symmetric entries
+select x,y from functions where x=y group by x,y having count(*)>1
+UNION
+SELECT f1.X, f1.Y FROM Functions AS f1, Functions AS f2
+WHERE f1.X <> f1.Y AND f1.X = f2.Y AND f1.Y = f2.X AND f1.X < f2.X
+ORDER BY X;
+
+--Q14
+--Alternative to using window function like lead or lag
+--Ask is to find those dates where the current temp is greater than the previous days temparature
+SELECT
+    weather.id AS 'Id'
+FROM
+    weather
+        JOIN
+    weather w ON DATEDIFF(weather.date, w.date) = 1
+        AND weather.Temperature > w.Temperature
+;
+
+
+--Q15
+--Mary is a teacher in a middle school and she has a table seat storing students' names and their corresponding seat ids. The column id is continuous increment. Mary wants to change seats for the adjacent students.
+
+SELECT
+    (CASE
+        WHEN MOD(id, 2) != 0 AND counts != id THEN id + 1
+        WHEN MOD(id, 2) != 0 AND counts = id THEN id
+        ELSE id - 1
+    END) AS id,
+    student
+FROM
+    seat,
+    (SELECT
+        COUNT(*) AS counts
+    FROM
+        seat) AS seat_counts
+ORDER BY id ASC;
+
+--Q16
+--Rank a column w/o using window function
+
+SELECT
+  Score,
+  (SELECT count(distinct Score) FROM Scores WHERE Score >= s.Score) Rank
+FROM Scores s
+ORDER BY Score desc
+
+--Q17
+--Write a SQL query to find all numbers that appear at least three times consecutively
+
+SELECT DISTINCT
+    l1.Num AS ConsecutiveNums
+FROM
+    Logs l1,
+    Logs l2,
+    Logs l3
+WHERE
+    l1.Id = l2.Id - 1
+    AND l2.Id = l3.Id - 1
+    AND l1.Num = l2.Num
+    AND l2.Num = l3.Num
+;
