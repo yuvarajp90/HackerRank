@@ -99,6 +99,9 @@ group by hacker_id,h.name
 having score>0
 order by score desc, hacker_id
 
+--Q9
+--Write a query to output the names of those students whose best friends got offered a higher salary than them. Names must be ordered by the salary amount offered to the best friends. It is guaranteed that no two students got same salary offer.
+
 --Q10
 select c.company_code,c.founder
 ,count(distinct lm.lead_manager_code)
